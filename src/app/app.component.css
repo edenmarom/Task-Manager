@@ -1,0 +1,64 @@
+:host {
+    --content-padding: 10px;
+    --header-color: #d4edf4;
+    --logo-orange-darker: #d17857;
+    --logo-orange-bright: #f1551b;
+    --logo-grey: #4f4f4f;
+    --logo-grey-darker: #2a2e30;
+    --logo-green: #81ff85;
+}
+
+* {
+    font-family: 'Radley';
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    display: block;
+    height: 60px;
+    padding: var(--content-padding);
+    box-shadow: 0px 5px 25px var(--shadow-color);
+    background-color: var(--header-color);
+}
+
+.brand-logo {
+    height: inherit;
+}
+
+.main-content {
+    display: flex;
+    flex-grow: 1;
+}
+
+.sidebar {
+    background-color: #714231;
+    padding: 10px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.nav-btn {
+    background-color: var(--logo-orange-darker);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-btn:hover {
+    background-color: var(--logo-orange-bright);
+}
+
+.content {
+    padding: var(--content-padding);
+    flex-grow: 1;
+}

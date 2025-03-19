@@ -1,0 +1,24 @@
+<main>
+  <a [routerLink]="['/']">
+    <header class="brand-name">
+      <img class="brand-logo" src="../assets/logo.PNG" alt="logo" aria-hidden="true" />
+    </header>
+  </a>
+  <div class="main-content">
+    <div class="sidebar" *ngIf="isSignedIn">
+      <a [routerLink]="['/profile']" class="nav-btn">
+        My Profile
+      </a>
+      <a [routerLink]="['/tasks']" class="nav-btn">
+        My Tasks
+      </a>
+      <a [routerLink]="['/new-task']" class="nav-btn">
+        Add New Task
+      </a>
+    </div>
+    <section class="content">
+      <router-outlet></router-outlet>
+    </section>
+  </div>
+</main>
+

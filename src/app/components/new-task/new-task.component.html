@@ -1,0 +1,27 @@
+<div class="add-task-container">
+  <div class="add-task-card">
+    <div class="add-task-form">
+      <h3>Add New Task</h3>
+      <div class="form-group">
+        <label for="taskName">Task Name:</label>
+        <input type="text" id="taskName">
+        <!-- <input type="text" id="taskName" [(ngModel)]="newTask.name"> -->
+      </div>
+      <div class="form-group">
+        <label for="taskDesc">Description:</label>
+        <textarea id="taskDesc" ></textarea>
+        <!-- <textarea id="taskDesc" [(ngModel)]="newTask.description"></textarea> -->
+      </div>
+      <div class="form-group">
+        <label for="taskStatus">Status:</label>
+        <!-- <select id="taskStatus" [(ngModel)]="newTask.status"> -->
+        <select id="taskStatus">
+          <option value="To Do">To Do</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Done">Done</option>
+        </select>
+      </div>
+      <button class="add-task-btn" (click)="addTask()">Add Task</button>
+    </div>
+  </div>
+</div>

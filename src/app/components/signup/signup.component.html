@@ -1,0 +1,21 @@
+<div class="signup-container">
+  <div class="signup-form">
+    <h2 class="signup-header">Sign Up</h2>
+    <form (ngSubmit)="signupHandler()">
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="input-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+      </div>
+      <button class="signup-btn" type="submit">Sign Up</button>
+    </form>
+    <p class="login-link">Already have an account? <a href="/login">Log in</a></p>
+  </div>
+</div>
