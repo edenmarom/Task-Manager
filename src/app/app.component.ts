@@ -20,6 +20,7 @@ export class AppComponent {
   constructor() {
     // Example: Check if user is signed in (replace with actual logic)
     // this.isSignedIn = this.authService.isAuthenticated();
+    //check!
   }
 
   ngOnInit(): void {
