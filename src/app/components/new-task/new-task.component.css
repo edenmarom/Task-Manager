@@ -40,12 +40,11 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    color: black;
+    color: var(--logo-grey);
 }
 
 .form-group option {
-    color: black;
-}
+    color: var(--logo-grey);}
 
 .form-group textarea {
     resize: vertical;

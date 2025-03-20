@@ -14,4 +14,26 @@
     </div>
   </div>
 </div>
+<div class="edit-task-overlay" *ngIf="isEditModalOpen && selectedTask">
+  <div class="edit-task-modal">
+    <h3>Edit Task</h3>
+    <label>Title:</label>
+    <input type="text" [(ngModel)]="selectedTask!.title" class="task-input" />
+    
+    <label>Description:</label>
+    <textarea [(ngModel)]="selectedTask!.description" class="task-textarea"></textarea>
+    
+    <label>Status:</label>
+    <select [(ngModel)]="selectedTask!.status" class="task-select">
+      <option value="To Do">To Do</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Done">Done</option>
+    </select>
+    
+    <div class="task-actions">
+      <button class="edit-btn" (click)="saveEditedTask()">Save</button>
+      <button class="delete-btn" (click)="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 

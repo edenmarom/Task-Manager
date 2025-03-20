@@ -3,6 +3,7 @@ export interface Task {
   title: string;
   description: string;
   status: string;
+  __v?: number;
 }
 
 export type NewTask = Partial<Omit<Task, '_id'>>;

@@ -28,7 +28,8 @@ export class TasksService {
 
   updateTask(updatedTask: Task): Observable<Task> {
     const url = `${this.updateTaskUrl}${updatedTask._id}`;
-    return this.http.put<Task>(url, updatedTask);
+    const { _id, __v, ...updatedTaskData } = updatedTask;
+    return this.http.put<Task>(url, updatedTaskData);
   }
 
   createTask(newTask: NewTask): Observable<Task> {
