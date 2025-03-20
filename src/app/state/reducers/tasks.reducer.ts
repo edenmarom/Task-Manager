@@ -7,5 +7,5 @@ export const initialState: ReadonlyArray<Task> = [];
 
 export const tasksReducer = createReducer(
   initialState,
-  on(TasksApiActions.tasksLoadedSuccess, (_state, { tasks }) => tasks)
+  on(TasksApiActions['tasksLoaded-Success'], (_state, { tasks }) => tasks)
 );

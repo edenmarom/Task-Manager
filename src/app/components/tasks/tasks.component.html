@@ -1,27 +1,17 @@
 <div class="tasks-container">
-  <!-- <div class="tasks-grid">
+  <div class="tasks-grid">
     <div class="tasks-column" id="to-do">
       <h3>To Do</h3>
-      <app-task *ngFor="let task of toDoTasks" [task]="task" (edit)="editTask($event)" (delete)="deleteTask($event)"></app-task>
+      <app-task *ngFor="let task of (toDoTasks | async)" [task]="task" (edit)="editTask($event)" (delete)="deleteTask($event)"></app-task>
     </div>
-
     <div class="tasks-column" id="in-progress">
       <h3>In Progress</h3>
-      <app-task *ngFor="let task of inProgressTasks" [task]="task" (edit)="editTask($event)" (delete)="deleteTask($event)"></app-task>
+      <app-task *ngFor="let task of (inProgressTasks | async)" [task]="task" (edit)="editTask($event)" (delete)="deleteTask($event)"></app-task>
     </div>
-
     <div class="tasks-column" id="done">
       <h3>Done</h3>
-      <app-task *ngFor="let task of doneTasks" [task]="task" (edit)="editTask($event)" (delete)="deleteTask($event)"></app-task>
+      <app-task *ngFor="let task of (doneTasks | async)" [task]="task" (edit)="editTask($event)" (delete)="deleteTask($event)"></app-task>
     </div>
-  </div> -->
-    <div>
-      tasks
-    </div> 
-   <app-task *ngFor="let task of (tasks | async)" [task]="task" (edit)="editTask($event)" (delete)="deleteTask($event)"></app-task>
-    <div>
-      tasksCollection
-    </div> 
-   <app-task *ngFor="let task of (tasksCollection | async)" [task]="task" (edit)="editTask($event)" (delete)="deleteTask($event)"></app-task>
+  </div>
 </div>
 

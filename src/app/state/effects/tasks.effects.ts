@@ -16,9 +16,9 @@ export class TasksEffect {
         ofType(TasksApiActions.loadTasks),
         switchMap(() =>
             this.tasksService.getTasks().pipe(
-                map((tasks: Task[]) => TasksApiActions.tasksLoadedSuccess({ tasks })),
+                map((tasks: Task[]) => TasksApiActions['tasksLoaded-Success']({ tasks })),
                 catchError((error: { message: string }) => 
-                    of(TasksApiActions.tasksLoadedError({ err: error.message })))
+                    of(TasksApiActions['tasksLoaded-Error']({ err: error.message })))
         )
     ));
 })}

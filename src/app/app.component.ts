@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink} from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { provideHttpClient } from '@angular/common/http';
 import { TasksApiActions } from './state/actions/tasks.actions';
 import { Task } from './interfaces/task.model';
 import { Store } from '@ngrx/store';

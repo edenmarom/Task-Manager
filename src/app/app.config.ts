@@ -9,14 +9,14 @@ import { userReducer } from './state/reducers/user.reducer';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TasksEffect } from './state/effects/tasks.effects';
 import { provideEffects } from '@ngrx/effects';
-
-
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routeConfig),
     provideClientHydration(withEventReplay()),
+    provideHttpClient(),
     provideStore({
       tasks: tasksReducer,
       taskCollection: taskCollectionReducer,

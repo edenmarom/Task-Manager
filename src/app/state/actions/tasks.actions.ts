@@ -13,7 +13,7 @@ export const TasksApiActions = createActionGroup({
   source: 'Tasks API',
   events: {
     'Load Tasks': emptyProps(),
-    'Tasks Loaded Success': props<{ tasks: ReadonlyArray<Task> }>(),
-    'Tasks Loaded Error': props<{ err: string }>(),
+    'Tasks Loaded - Success': props<{ tasks: ReadonlyArray<Task> }>(),
+    'Tasks Loaded - Error': props<{ err: string }>(),
   },
 });
