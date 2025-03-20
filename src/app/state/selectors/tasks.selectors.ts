@@ -10,6 +10,6 @@ export const selectTaskCollection = createSelector(
   selectTasks,
   selectTaskCollectionState,
   (tasks, collection) => {
-    return collection.map((id) => tasks.find((task) => task.id === id)!);
+    return collection.map((id) => tasks.find((task) => task._id === id)!);
   }
 );

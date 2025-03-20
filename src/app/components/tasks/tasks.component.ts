@@ -6,6 +6,7 @@ import { TasksService } from '../../services/tasks.service';
 import { selectTasks } from '../../state/selectors/tasks.selectors';
 import { Store } from '@ngrx/store';
 import { map, Observable } from 'rxjs';
+import { TasksApiActions } from '../../state/actions/tasks.actions';
 
 @Component({
   selector: 'app-tasks',
@@ -27,16 +28,10 @@ export class TasksComponent {
 
   editTask(task: any) {
     console.log('Edit task:', task);
-    // Implement edit logic here
+    this.store.dispatch(TasksApiActions.updateTask({updatedTask: task}));
   }
 
-  deleteTask(task: any) {
-    console.log('Delete task:', task);
-    // this.tasks = this.tasks.filter((t) => t !== task);
-    // this.toDoTasks = this.tasks.filter((task) => task.status === 'To Do');
-    // this.inProgressTasks = this.tasks.filter(
-    //   (task) => task.status === 'In Progress'
-    // );
-    // this.doneTasks = this.tasks.filter((task) => task.status === 'Done');
+  deleteTask(task: Task) {
+    this.store.dispatch(TasksApiActions.deleteTask({ taskId: task._id }));
   }
 }
