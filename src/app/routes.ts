@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { DetailsComponent } from './components/details/details.component';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { TasksComponent } from './components/tasks/tasks.component';
@@ -32,16 +30,6 @@ const routeConfig: Routes = [
     path: 'new-task',
     component: NewTaskComponent,
     title: 'Task Manager',
-  },
-  {
-    path: 'home',
-    component: HomeComponent,
-    title: 'Home Page',
-  },
-  {
-    path: 'details/:id',
-    component: DetailsComponent,
-    title: 'Details Page',
   },
 ];
 

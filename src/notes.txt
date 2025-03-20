@@ -1,7 +1,6 @@
 TODOS:
 
 client:
-* fix apperance of tasks.
 * understand the collection perpuse
 * apllay actions on tasks(add del edit)
 * show tasks of spesific user
