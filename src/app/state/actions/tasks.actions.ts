@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { Task } from '../../interfaces/task.model';
+import { NewTask, Task } from '../../interfaces/task.model';
 
 export const TasksActions = createActionGroup({
   source: 'Tasks',
@@ -21,7 +21,7 @@ export const TasksApiActions = createActionGroup({
     'Update Task': props<{ updatedTask: Task }>(),
     'Update Task - Success': props<{ updatedTask: Task }>(),
     'Update Task - Error': props<{ err: string }>(),
-    'Create Task': props<{ newTask: Task }>(),
+    'Create Task': props<{ newTask: NewTask }>(),
     'Create Task - Success': props<{ newTask: Task }>(),
     'Create Task - Error': props<{ err: string }>(),
   },

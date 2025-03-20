@@ -4,3 +4,5 @@ export interface Task {
   description: string;
   status: string;
 }
+
+export type NewTask = Partial<Omit<Task, '_id'>>;

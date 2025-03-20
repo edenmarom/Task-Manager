@@ -1,13 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink} from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TasksApiActions } from './state/actions/tasks.actions';
 import { Task } from './interfaces/task.model';
 import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, RouterLink],
+  imports: [RouterOutlet, CommonModule, RouterLink, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

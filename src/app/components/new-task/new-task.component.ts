@@ -1,25 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { NewTask, Task } from '../../interfaces/task.model';
+import { TasksApiActions } from '../../state/actions/tasks.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-task',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './new-task.component.html',
   styleUrl: './new-task.component.css',
 })
 export class NewTaskComponent {
-  newTask = {
-    name: '',
+  private store = inject(Store<ReadonlyArray<Task>>);
+  private router = inject(Router);
+  newTask: NewTask = {
+    title: '',
     description: '',
     status: 'To Do',
   };
 
-  constructor() {}
-
   addTask() {
-    // Here you would typically add the task to your task list or send it to a backend service.
-    console.log('New task:', this.newTask);
-
-    // Redirect to the tasks page
-    // this.router.navigate(['/']);
+    this.store.dispatch(TasksApiActions.createTask({ newTask: this.newTask }));
+    this.router.navigate(['/tasks']);
   }
 }

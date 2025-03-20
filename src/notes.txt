@@ -1,9 +1,13 @@
 TODOS:
 
 client:
-* understand the collection perpuse
 * apllay actions on tasks(add del edit)
+    - del V
+    - add V
+    - edit
 * show tasks of spesific user
+* understand the collection perpuse
+
 
 server:
 * add userid field to tasks or tasks id list to each user... ask gpt
