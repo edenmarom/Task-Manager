@@ -39,6 +39,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     outline: 3px var(--logo-orange-darker);
+    color: black;
 }
 
 .login-form button {

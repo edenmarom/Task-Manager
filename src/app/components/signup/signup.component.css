@@ -39,6 +39,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     outline: 3px var(--logo-orange-darker);
+    color: black;
 }
 
 .signup-form button {
@@ -49,6 +50,10 @@
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
+}
+
+.signup-form small {
+    color: var(--logo-orange-bright);
 }
 
 .signup-form button:hover {

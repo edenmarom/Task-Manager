@@ -5,10 +5,17 @@ import { FormsModule } from '@angular/forms';
 import { TasksApiActions } from './state/actions/tasks.actions';
 import { Task } from './interfaces/task.model';
 import { Store } from '@ngrx/store';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, RouterLink, FormsModule],
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    RouterLink,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

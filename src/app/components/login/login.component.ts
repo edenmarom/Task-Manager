@@ -16,14 +16,11 @@ export class LoginComponent {
   email: string = "";
   password: string = "";
   
-
   // addTask() {
   //   this.store.dispatch(TasksApiActions.createTask({ newTask: this.newTask }));
   //   this.router.navigate(['/tasks']);
   // }
 
-
-  
   loginHandler(){
     console.log("login");
     console.log(this.email);

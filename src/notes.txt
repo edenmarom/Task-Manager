@@ -1,12 +1,13 @@
 TODOS:
 
 client:
+* add validations to add new task and login
+* remove mene from login sign-up screens
+* apply login signup logic to store
 * show tasks of specific user
 * understand the collection idea
 * logout btn
 * avatars
-* add margin in add new tasks
-* remove mene from login sign-up screens
 
 server:
 * Ensure that users can only access and modify their own data.'
