@@ -1,14 +1,16 @@
 TODOS:
 
 client:
-* show tasks of spesific user
-* understand the collection perpuse
+* show tasks of specific user
+* understand the collection idea
 * logout btn
 * avatars
+* add margin in add new tasks
+* remove mene from login sign-up screens
 
 server:
 * add login jwt logic to server
-    - check login\signup funcs
-    - check   verifyToken middlewere
+    - check login\sign-up func V
+    - check   verifyToken middleware
 * add userid field to tasks or tasks id list to each user... ask gpt
 * Ensure that users can only access and modify their own data.
