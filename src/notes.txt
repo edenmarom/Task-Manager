@@ -3,7 +3,12 @@ TODOS:
 client:
 * show tasks of spesific user
 * understand the collection perpuse
+* logout btn
+* avatars
 
 server:
-* add userid field to tasks or tasks id list to each user... ask gpt
 * add login jwt logic to server
+    - check login\signup funcs
+    - check   verifyToken middlewere
+* add userid field to tasks or tasks id list to each user... ask gpt
+* Ensure that users can only access and modify their own data.
