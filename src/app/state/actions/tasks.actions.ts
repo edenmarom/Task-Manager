@@ -7,7 +7,7 @@ export const TasksActions = createActionGroup({
     'Add Task': props<{ taskId: string }>(),
     'Remove Task': props<{ taskId: string }>(),
   },
-});
+}); //TODO: check if needed
 
 export const TasksApiActions = createActionGroup({
   source: 'Tasks API',

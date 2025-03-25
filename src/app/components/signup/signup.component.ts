@@ -1,9 +1,15 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { User } from '../../interfaces/user.model';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
+import { UsersApiActions } from '../../state/actions/user.actions';
+
+interface SignupForm {
+  email: FormControl<string | null>;
+  password: FormControl<string | null>;
+  confirmPassword: FormControl<string | null>;
+}
 
 @Component({
   selector: 'app-signup',
@@ -13,27 +19,23 @@ import { CommonModule } from '@angular/common';
 })
 export class SignupComponent {
   private store = inject(Store<ReadonlyArray<User>>);
-  private router = inject(Router);
   private fb = inject(FormBuilder);
-  signupForm: FormGroup;
-
-  constructor() {
-    this.signupForm = this.fb.group(
+  signupForm!: FormGroup<SignupForm>;
+  
+  ngOnInit() {
+    this.signupForm = this.fb.group<SignupForm>(
       {
-        email: ['', [Validators.required, Validators.email]],
-        password: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.pattern(
-              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-            ),
-          ],
-        ],
-        confirmPassword: ['', Validators.required],
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+          ),
+        ]),
+        confirmPassword: new FormControl('', Validators.required),
       },
-      { validators: this.passwordsMatch }
+      { validators: this.passwordsMatchValidator }
     );
   }
 
@@ -47,22 +49,24 @@ export class SignupComponent {
     return this.signupForm.get('confirmPassword');
   }
 
-  private passwordsMatch(form: FormGroup) {
-    return form.get('password')?.value === form.get('confirmPassword')?.value
-      ? null
-      : { mismatch: true };
-  }
+  passwordsMatchValidator: ValidatorFn = (
+    formGroup: AbstractControl
+  ): ValidationErrors | null => {
+    const form = formGroup as FormGroup;
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    if (password !== confirmPassword) {
+      return { mismatch: true };
+    }
+    return null;
+  };
 
   signupHandler() {
-    if (this.signupForm.invalid) {
-      console.error('Invalid form submission', this.signupForm.errors);
-      return;
-    } // TODO: check if needed
-
-    console.log('Signup successful', this.signupForm.value);
-
-    // Dispatch action to store user or navigate
-    // this.store.dispatch(signupUser({ email: this.signupForm.value.email, password: this.signupForm.value.password }));
-    // this.router.navigate(['/dashboard']);
+    this.store.dispatch(
+      UsersApiActions.signup({
+        email: this.signupForm.value.email ?? '',
+        password: this.signupForm.value.password ?? '',
+      })
+    );    
   }
 }
