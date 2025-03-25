@@ -1,29 +1,52 @@
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { User } from '../../interfaces/user.model';
 import { Store } from '@ngrx/store';
-import { Router } from '@angular/router';
+import { UsersApiActions } from '../../state/actions/user.actions';
+
+interface LoginForm {
+  email: FormControl<string | null>;
+  password: FormControl<string | null>;
+}
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
   private store = inject(Store<ReadonlyArray<User>>);
-  private router = inject(Router);
-  email: string = "";
-  password: string = "";
-  
-  // addTask() {
-  //   this.store.dispatch(TasksApiActions.createTask({ newTask: this.newTask }));
-  //   this.router.navigate(['/tasks']);
-  // }
+  private fb = inject(FormBuilder);
+  loginForm!: FormGroup<LoginForm>;
 
-  loginHandler(){
-    console.log("login");
-    console.log(this.email);
-    console.log(this.password)
+  ngOnInit() {
+    this.loginForm = this.fb.group<LoginForm>({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+        ),
+      ]),
+    });
   }
+
+  get email() {
+    return this.loginForm.get('email');
+  }
+  get password() {
+    return this.loginForm.get('password');
+  }
+
+  loginHandler() {
+      this.store.dispatch(
+        UsersApiActions.login({
+          email: this.loginForm.value.email ?? '',
+          password: this.loginForm.value.password ?? '',
+        })
+      );    
+    }
 }

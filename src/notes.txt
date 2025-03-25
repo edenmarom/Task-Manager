@@ -1,7 +1,8 @@
 TODOS:
 
 client:
-* add validations to add new task and login
+* add validations to add new task
+* add new task (add user id)
 * remove mene from login sign-up screens
 * apply login signup logic to store
 * show tasks of specific user
