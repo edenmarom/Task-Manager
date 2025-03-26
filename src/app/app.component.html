@@ -5,7 +5,7 @@
     </header>
   </a>
   <div class="main-content">
-    <div class="sidebar" *ngIf="isSignedIn">
+    <div class="sidebar" *ngIf="isSignedIn | async">
       <a [routerLink]="['/profile']" class="nav-btn">
         My Profile
       </a>
