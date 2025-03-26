@@ -41,9 +41,27 @@ export class TasksService {
     );
   }
 
-  deleteTask(taskId: string): Observable<any> {
+  deleteTask(taskId: string): Observable<Object|null> {
     const url = `${this.deleteTaskUrl}${taskId}`;
-    return this.http.delete(url);
+    return this.store.select(selectUserAuthData).pipe(
+      switchMap((data: UserAuthData) => {
+        if (data && data.userId && data.token) {
+          const headers = new HttpHeaders({
+            Authorization: data.token,
+          });
+          return this.http.delete(url, { headers }).pipe(
+            map((task) => task),
+            catchError((error) => {
+              console.error('Error deleting task');
+              return throwError(() => error);
+            })
+          );
+        } else {
+          console.info('User is logged out, not deleting task.');
+          return of(null);
+        }
+      })
+    );
   }
 
   updateTask(updatedTask: Task): Observable<Task> {
@@ -52,7 +70,7 @@ export class TasksService {
     return this.http.put<Task>(url, updatedTaskData);
   }
 
-  createTask(newTask: NewTask): Observable<Task|null> {
+  createTask(newTask: NewTask): Observable<Task | null> {
     return this.store.select(selectUserAuthData).pipe(
       switchMap((data: UserAuthData) => {
         if (data && data.userId && data.token) {
@@ -73,9 +91,7 @@ export class TasksService {
               })
             );
         } else {
-          console.info(
-            'User is logged out, task creation prevented.'
-          );
+          console.info('User is logged out, task creation prevented.');
           return of(null);
         }
       })

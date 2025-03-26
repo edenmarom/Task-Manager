@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 import { NewTask, Task } from '../../interfaces/task.model';
 import { TasksApiActions } from '../../state/actions/tasks.actions';
 import { Router } from '@angular/router';
+import { Actions, ofType } from '@ngrx/effects';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-new-task',
@@ -13,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class NewTaskComponent {
   private store = inject(Store<ReadonlyArray<Task>>);
+  private actions$ = inject(Actions);
   private router = inject(Router);
   newTask: NewTask = {
     title: '',
@@ -21,7 +24,18 @@ export class NewTaskComponent {
   };
 
   addTask() {
+    console.log('🔹 addTask() called:', this.newTask);
     this.store.dispatch(TasksApiActions.createTask({ newTask: this.newTask }));
-    this.router.navigate(['/tasks']);
+    this.actions$
+      .pipe(ofType(TasksApiActions['createTask-Success']), take(1))
+      .subscribe(() => {
+        console.log('✅ Task successfully created!');
+        this.newTask = {
+          title: '',
+          description: '',
+          status: 'To Do',
+        };
+        this.router.navigate(['/tasks']);
+      });
   }
 }

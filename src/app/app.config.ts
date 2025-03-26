@@ -11,6 +11,7 @@ import { TasksEffect } from './state/effects/tasks.effects';
 import { provideEffects } from '@ngrx/effects';
 import { provideHttpClient } from '@angular/common/http';
 import { AuthEffect } from './state/effects/auth.effects';
+import { metaReducers, reducers } from './state/reducers/meta-reducers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,9 +20,8 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideHttpClient(),
     provideStore({
-      tasks: tasksReducer,
-      taskCollection: taskCollectionReducer,
-      user: userReducer,
+      reducer: reducers,
+      metaReducers,
     }),
     provideEffects(TasksEffect, AuthEffect),
     provideStoreDevtools({

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { TasksService } from '../../services/tasks.service';
 import { TasksApiActions } from '../actions/tasks.actions';
 import { Task } from '../../interfaces/task.model';
@@ -16,9 +16,18 @@ export class TasksEffect {
       ofType(TasksApiActions.deleteTask),
       switchMap(({ taskId }) =>
         this.tasksService.deleteTask(taskId).pipe(
-          map((task: Task) =>
-            TasksApiActions['deleteTask-Success']({ taskId: task._id })
-          ),
+          map((task: Object | null) => {
+            let convertedTask = task as Task;
+            if (convertedTask) {
+              return TasksApiActions['deleteTask-Success']({
+                taskId: convertedTask._id,
+              });
+            } else {
+              return TasksApiActions['deleteTask-Error']({
+                err: 'Error deleting task',
+              });
+            }
+          }),
           catchError((error: { message: string }) =>
             of(TasksApiActions['deleteTask-Error']({ err: error.message }))
           )
@@ -46,22 +55,30 @@ export class TasksEffect {
   createTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TasksApiActions.createTask),
+      tap(({ newTask }) =>
+        console.log('🔹 createTask effect triggered:', newTask)
+      ), 
       switchMap(({ newTask }) =>
         this.tasksService.createTask(newTask).pipe(
-          map((task: Task|null) =>
-          {
+          map((task: Task | null) => {
             if (task) {
+              console.log('✅ Task successfully created:', task);
               return TasksApiActions['createTask-Success']({ newTask: task });
             } else {
+              console.log('❌ Task creation failed');
               return TasksApiActions['createTask-Error']({
                 err: 'Error creating new task',
               });
             }
-          }
-          ),
-          catchError((error: { message: string }) =>
-            of(TasksApiActions['createTask-Error']({ err: error.message || 'Unknown error' }))
-          )
+          }),
+          catchError((error: { message: string }) => {
+            console.error('❌ createTask error:', error);
+            return of(
+              TasksApiActions['createTask-Error']({
+                err: error.message || 'Unknown error',
+              })
+            );
+          })
         )
       )
     )
