@@ -18,15 +18,6 @@ export class TasksService {
   updateTaskUrl = this.baseUrl + 'updateTask/';
   createTaskUrl = this.baseUrl + 'createTask/';
 
-  // Not Used.
-  getAllTasks(): Observable<Array<Task>> {
-    return this.http.get<Task[]>(this.getTasksUrl).pipe(
-      map((tasks) => {
-        return tasks || [];
-      })
-    );
-  }
-
   getTasksByUserId(): Observable<Array<Task>> {
     return this.store.select(selectUserAuthData).pipe(
       switchMap((data: UserAuthData) => {
@@ -61,7 +52,33 @@ export class TasksService {
     return this.http.put<Task>(url, updatedTaskData);
   }
 
-  createTask(newTask: NewTask): Observable<Task> {
-    return this.http.post<Task>(this.createTaskUrl, newTask);
+  createTask(newTask: NewTask): Observable<Task|null> {
+    return this.store.select(selectUserAuthData).pipe(
+      switchMap((data: UserAuthData) => {
+        if (data && data.userId && data.token) {
+          const headers = new HttpHeaders({
+            Authorization: data.token,
+          });
+          const newTaskWithUserId = {
+            ...newTask,
+            userId: data.userId,
+          };
+          return this.http
+            .post<Task>(this.createTaskUrl, newTaskWithUserId, { headers })
+            .pipe(
+              map((task) => task),
+              catchError((error) => {
+                console.error('Error creating new task:', error);
+                return throwError(() => error);
+              })
+            );
+        } else {
+          console.info(
+            'User is logged out, task creation prevented.'
+          );
+          return of(null);
+        }
+      })
+    );
   }
 }

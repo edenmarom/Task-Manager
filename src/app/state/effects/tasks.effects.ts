@@ -48,11 +48,19 @@ export class TasksEffect {
       ofType(TasksApiActions.createTask),
       switchMap(({ newTask }) =>
         this.tasksService.createTask(newTask).pipe(
-          map((task: Task) =>
-            TasksApiActions['createTask-Success']({ newTask: task })
+          map((task: Task|null) =>
+          {
+            if (task) {
+              return TasksApiActions['createTask-Success']({ newTask: task });
+            } else {
+              return TasksApiActions['createTask-Error']({
+                err: 'Error creating new task',
+              });
+            }
+          }
           ),
           catchError((error: { message: string }) =>
-            of(TasksApiActions['createTask-Error']({ err: error.message }))
+            of(TasksApiActions['createTask-Error']({ err: error.message || 'Unknown error' }))
           )
         )
       )
