@@ -1,13 +1,11 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { User } from '../../interfaces/user.model';
 
 export const UsersActions = createActionGroup({
   source: 'Users',
   events: {
-    'Add User': props<{ userId: string }>(),
-    'Remove User': props<{ userId: string }>(),
+    Logout: emptyProps(),
   },
-}); // TODO:check if needed
+});
 
 export const UsersApiActions = createActionGroup({
   source: 'Users API',

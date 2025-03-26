@@ -2,12 +2,11 @@ TODOS:
 
 client:
 * add new task (add user id)
-* apply login signup logic to store
 * show tasks of specific user
 * understand the collection idea
-* logout btn
 * avatars
 * add validations to add new task
+* remove angular tutorial files
 
 server:
 * Ensure that users can only access and modify their own data.'

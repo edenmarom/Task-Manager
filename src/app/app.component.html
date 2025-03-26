@@ -15,6 +15,7 @@
       <a [routerLink]="['/new-task']" class="nav-btn">
         Add New Task
       </a>
+      <button class="nav-btn" (click)="logOut()">Log Out</button>
     </div>
     <section class="content">
       <router-outlet></router-outlet>

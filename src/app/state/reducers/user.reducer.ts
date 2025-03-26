@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { UsersApiActions } from '../actions/user.actions';
+import { UsersActions, UsersApiActions } from '../actions/user.actions';
 import { User } from '../../interfaces/user.model';
 
 export const initialState: User = {
@@ -27,5 +27,6 @@ export const userReducer = createReducer(
     id: userId,
     token: token,
     loggedIn: true,
-  }))
+  })),
+  on(UsersActions.logout, (state) => (initialState))
 );
