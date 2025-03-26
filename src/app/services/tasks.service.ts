@@ -1,22 +1,51 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { NewTask, Task } from '../interfaces/task.model';
+import { Store } from '@ngrx/store';
+import { User, UserAuthData } from '../interfaces/user.model';
+import { selectUserAuthData } from '../state/selectors/user.selectors';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
   constructor(private http: HttpClient) {}
+  private store = inject(Store<User>);
   baseUrl = 'http://localhost:3000/tasks/';
   getTasksUrl = this.baseUrl + 'getAllTasks';
+  getTasksByUserIdUrl = this.baseUrl + 'getTasksByUserId/';
   deleteTaskUrl = this.baseUrl + 'deleteTask/';
   updateTaskUrl = this.baseUrl + 'updateTask/';
   createTaskUrl = this.baseUrl + 'createTask/';
 
-  getTasks(): Observable<Array<Task>> {
+  // Not Used.
+  getAllTasks(): Observable<Array<Task>> {
     return this.http.get<Task[]>(this.getTasksUrl).pipe(
       map((tasks) => {
         return tasks || [];
+      })
+    );
+  }
+
+  getTasksByUserId(): Observable<Array<Task>> {
+    return this.store.select(selectUserAuthData).pipe(
+      switchMap((data: UserAuthData) => {
+        if (data && data.userId && data.token) {
+          const url = `${this.getTasksByUserIdUrl}${data.userId}`;
+          const headers = new HttpHeaders({
+            Authorization: data.token,
+          });
+          return this.http.get<Task[]>(url, { headers }).pipe(
+            map((tasks) => tasks || []),
+            catchError((error) => {
+              console.error('Error fetching tasks');
+              return throwError(() => error);
+            })
+          );
+        } else {
+          console.info('User is logged out, not fetching tasks.');
+          return of([]);
+        }
       })
     );
   }

@@ -7,3 +7,12 @@ export const selectIsLoggedIn = createSelector(
   selectUser,
   (user: User | undefined) => user?.loggedIn || false
 );
+export const selectUserAuthData = createSelector(
+  selectUser,
+  (user: User | undefined) => {
+    return {
+      userId: user?.id || '',
+      token: user?.token || '',
+    };
+  }
+);

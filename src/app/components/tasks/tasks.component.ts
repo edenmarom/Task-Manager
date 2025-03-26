@@ -19,18 +19,23 @@ import { TasksApiActions } from '../../state/actions/tasks.actions';
 export class TasksComponent {
   private store = inject(Store<ReadonlyArray<Task>>);
   tasksService: TasksService = inject(TasksService);
-  tasks: Observable<readonly Task[]> = this.store.select(selectTasks);
-  toDoTasks: Observable<readonly Task[]> = this.tasks.pipe(
-    map((tasks) => tasks.filter((task) => task.status === 'To Do'))
-  );
-  inProgressTasks: Observable<readonly Task[]> = this.tasks.pipe(
-    map((tasks) => tasks.filter((task) => task.status === 'In Progress'))
-  );
-  doneTasks: Observable<readonly Task[]> = this.tasks.pipe(
-    map((tasks) => tasks.filter((task) => task.status === 'Done'))
-  );
   selectedTask: Task | null = null;
   isEditModalOpen: boolean = false;
+
+  tasks$: Observable<readonly Task[]> = this.store.select(selectTasks);
+  toDoTasks$: Observable<readonly Task[]> = this.tasks$.pipe(
+    map((tasks) => tasks.filter((task) => task.status === 'To Do'))
+  );
+  inProgressTasks$: Observable<readonly Task[]> = this.tasks$.pipe(
+    map((tasks) => tasks.filter((task) => task.status === 'In Progress'))
+  );
+  doneTasks$: Observable<readonly Task[]> = this.tasks$.pipe(
+    map((tasks) => tasks.filter((task) => task.status === 'Done'))
+  );
+
+  ngOnInit() {
+    this.store.dispatch(TasksApiActions.loadTasks());
+  }
 
   openEditModal(task: Task) {
     this.selectedTask = { ...task };

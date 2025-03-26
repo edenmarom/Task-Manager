@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { TasksApiActions } from '../actions/tasks.actions';
 import { Task } from '../../interfaces/task.model';
+import { UsersActions } from '../actions/user.actions';
 
 export const initialState: ReadonlyArray<Task> = [];
 
@@ -16,5 +17,6 @@ export const tasksReducer = createReducer(
   on(TasksApiActions['createTask-Success'], (state, { newTask }) => [
     ...state,
     newTask,
-  ])
+  ]),
+  on(UsersActions.logout, (state) => (initialState))
 );

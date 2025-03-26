@@ -15,10 +15,12 @@ export interface UserCredentials {
   password: string;
 }
 
+export interface UserAuthData {
+  userId: string;
+  token: string;
+}
+
 export interface AuthResponse {
   success: boolean;
-  data: {
-    userId: string;
-    token: string;
-  };
+  data: UserAuthData;
 }

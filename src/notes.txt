@@ -2,7 +2,6 @@ TODOS:
 
 client:
 * add new task (add user id)
-* show tasks of specific user
 * understand the collection idea
 * avatars
 * add validations to add new task

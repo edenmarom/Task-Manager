@@ -63,7 +63,7 @@ export class TasksEffect {
     return this.actions$.pipe(
       ofType(TasksApiActions.loadTasks),
       switchMap(() =>
-        this.tasksService.getTasks().pipe(
+        this.tasksService.getTasksByUserId().pipe(
           map((tasks: Task[]) =>
             TasksApiActions['tasksLoaded-Success']({ tasks })
           ),
