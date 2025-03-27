@@ -18,7 +18,7 @@
           <option value="Done">Done</option>
         </select>
       </div>
-      <button class="add-task-btn" (click)="addTask()">Add Task</button>
+      <button class="add-task-btn"  *ngIf="isLoggedIn$ | async" (click)="addTask()">Add Task</button>
     </div>
   </div>
 </div>

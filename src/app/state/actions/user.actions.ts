@@ -1,12 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 
-export const UsersActions = createActionGroup({
-  source: 'Users',
-  events: {
-    Logout: emptyProps(),
-  },
-});
-
 export const UsersApiActions = createActionGroup({
   source: 'Users API',
   events: {
@@ -17,7 +10,5 @@ export const UsersApiActions = createActionGroup({
     'Login - Success': props<{ userId: string; token: string }>(),
     'Login - Error': props<{ err: string }>(),
     "Logout": emptyProps(),
-    'Logout - Success': emptyProps(),
-    'Logout - Error': props<{ err: string }>(),
   },
 });

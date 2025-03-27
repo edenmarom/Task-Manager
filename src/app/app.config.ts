@@ -4,14 +4,12 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import routeConfig from './routes';
 import { provideStore } from '@ngrx/store';
 import { tasksReducer } from './state/reducers/tasks.reducer';
-import { taskCollectionReducer } from './state/reducers/task-collection.reducer';
 import { userReducer } from './state/reducers/user.reducer';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { TasksEffect } from './state/effects/tasks.effects';
 import { provideEffects } from '@ngrx/effects';
 import { provideHttpClient } from '@angular/common/http';
 import { AuthEffect } from './state/effects/auth.effects';
-import { metaReducers, reducers } from './state/reducers/meta-reducers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,9 +17,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routeConfig),
     provideClientHydration(withEventReplay()),
     provideHttpClient(),
-    provideStore({
-      reducer: reducers,
-      metaReducers,
+    provideStore({ 
+      tasks: tasksReducer,
+      user: userReducer 
     }),
     provideEffects(TasksEffect, AuthEffect),
     provideStoreDevtools({

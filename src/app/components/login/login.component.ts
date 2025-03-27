@@ -1,9 +1,17 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { User } from '../../interfaces/user.model';
 import { Store } from '@ngrx/store';
 import { UsersApiActions } from '../../state/actions/user.actions';
+import { TaskManagerState } from '../../state/reducers/task-manager-state';
 
 interface LoginForm {
   email: FormControl<string | null>;
@@ -17,7 +25,7 @@ interface LoginForm {
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  private store = inject(Store<ReadonlyArray<User>>);
+  private store = inject(Store<TaskManagerState>);
   private fb = inject(FormBuilder);
   loginForm!: FormGroup<LoginForm>;
 
@@ -42,11 +50,11 @@ export class LoginComponent {
   }
 
   loginHandler() {
-      this.store.dispatch(
-        UsersApiActions.login({
-          email: this.loginForm.value.email ?? '',
-          password: this.loginForm.value.password ?? '',
-        })
-      );    
-    }
+    this.store.dispatch(
+      UsersApiActions.login({
+        email: this.loginForm.value.email ?? '',
+        password: this.loginForm.value.password ?? '',
+      })
+    );
+  }
 }

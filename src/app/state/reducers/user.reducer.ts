@@ -1,8 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
-import { UsersActions, UsersApiActions } from '../actions/user.actions';
+import { UsersApiActions } from '../actions/user.actions';
 import { User } from '../../interfaces/user.model';
 
-export const initialState: User = {
+export const userInitialState: User = {
   id: "",
   name: "",
   email: "",
@@ -15,7 +15,7 @@ export const initialState: User = {
 };
 
 export const userReducer = createReducer(
-  initialState,
+  userInitialState,
   on(UsersApiActions['signup-Success'], (state, { userId, token }) => ({
     ...state,
     id: userId,
@@ -28,5 +28,5 @@ export const userReducer = createReducer(
     token: token,
     loggedIn: true,
   })),
-  on(UsersActions.logout, (state) => (initialState))
+  on(UsersApiActions.logout, (state) => userInitialState)
 );

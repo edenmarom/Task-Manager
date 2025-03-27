@@ -1,9 +1,19 @@
 import { Component, inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { User } from '../../interfaces/user.model';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { UsersApiActions } from '../../state/actions/user.actions';
+import { TaskManagerState } from '../../state/reducers/task-manager-state';
 
 interface SignupForm {
   email: FormControl<string | null>;
@@ -18,10 +28,10 @@ interface SignupForm {
   styleUrl: './signup.component.css',
 })
 export class SignupComponent {
-  private store = inject(Store<ReadonlyArray<User>>);
+  private store = inject(Store<TaskManagerState>);
   private fb = inject(FormBuilder);
   signupForm!: FormGroup<SignupForm>;
-  
+
   ngOnInit() {
     this.signupForm = this.fb.group<SignupForm>(
       {
@@ -67,6 +77,6 @@ export class SignupComponent {
         email: this.signupForm.value.email ?? '',
         password: this.signupForm.value.password ?? '',
       })
-    );    
+    );
   }
 }

@@ -1,14 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { NewTask, Task } from '../../interfaces/task.model';
 
-export const TasksActions = createActionGroup({
-  source: 'Tasks',
-  events: {
-    'Add Task': props<{ taskId: string }>(),
-    'Remove Task': props<{ taskId: string }>(),
-  },
-}); //TODO: check if needed
-
 export const TasksApiActions = createActionGroup({
   source: 'Tasks API',
   events: {

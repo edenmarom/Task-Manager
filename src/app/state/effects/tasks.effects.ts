@@ -1,21 +1,33 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import {
+  catchError,
+  map,
+  switchMap,
+  takeUntil,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { TasksService } from '../../services/tasks.service';
 import { TasksApiActions } from '../actions/tasks.actions';
 import { Task } from '../../interfaces/task.model';
+import { Store } from '@ngrx/store';
+import { TaskManagerState } from '../reducers/task-manager-state';
+import { UsersApiActions } from '../actions/user.actions';
 
 @Injectable()
 export class TasksEffect {
+  private store = inject(Store<TaskManagerState>);
   private actions$: Actions = inject(Actions);
   private tasksService: TasksService = inject(TasksService);
+  private destroy$ = new Subject<void>();
 
   deleteTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TasksApiActions.deleteTask),
       switchMap(({ taskId }) =>
         this.tasksService.deleteTask(taskId).pipe(
+          takeUntil(this.actions$.pipe(ofType(UsersApiActions.logout))),
           map((task: Object | null) => {
             let convertedTask = task as Task;
             if (convertedTask) {
@@ -41,6 +53,7 @@ export class TasksEffect {
       ofType(TasksApiActions.updateTask),
       switchMap(({ updatedTask }) =>
         this.tasksService.updateTask(updatedTask).pipe(
+          takeUntil(this.actions$.pipe(ofType(UsersApiActions.logout))),
           map((task: Task) =>
             TasksApiActions['updateTask-Success']({ updatedTask: task })
           ),
@@ -55,38 +68,36 @@ export class TasksEffect {
   createTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TasksApiActions.createTask),
-      tap(({ newTask }) =>
-        console.log('🔹 createTask effect triggered:', newTask)
-      ), 
-      switchMap(({ newTask }) =>
-        this.tasksService.createTask(newTask).pipe(
+      withLatestFrom(this.store.select('user')),
+      switchMap(([{ newTask }, user]) => {
+        if (!user.loggedIn) {
+          return of(
+            TasksApiActions['createTask-Error']({ err: 'User is logged out' })
+          );
+        }
+        return this.tasksService.createTask(newTask).pipe(
+          takeUntil(this.actions$.pipe(ofType(UsersApiActions.logout))),
           map((task: Task | null) => {
             if (task) {
-              console.log('✅ Task successfully created:', task);
               return TasksApiActions['createTask-Success']({ newTask: task });
             } else {
-              console.log('❌ Task creation failed');
               return TasksApiActions['createTask-Error']({
                 err: 'Error creating new task',
               });
             }
           }),
-          catchError((error: { message: string }) => {
-            console.error('❌ createTask error:', error);
-            return of(
-              TasksApiActions['createTask-Error']({
-                err: error.message || 'Unknown error',
-              })
-            );
+          catchError((err) => {
+            return of(TasksApiActions['createTask-Error']({ err }));
           })
-        )
-      )
+        );
+      })
     )
   );
 
   loadTasks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(TasksApiActions.loadTasks),
+      takeUntil(this.actions$.pipe(ofType(UsersApiActions.logout))),
       switchMap(() =>
         this.tasksService.getTasksByUserId().pipe(
           map((tasks: Task[]) =>
@@ -99,4 +110,11 @@ export class TasksEffect {
       )
     );
   });
+
+  constructor() {
+    this.actions$.pipe(ofType(UsersApiActions.logout)).subscribe(() => {
+      this.destroy$.next();
+      this.destroy$.complete();
+    });
+  }
 }

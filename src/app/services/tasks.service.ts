@@ -6,11 +6,12 @@ import { NewTask, Task } from '../interfaces/task.model';
 import { Store } from '@ngrx/store';
 import { User, UserAuthData } from '../interfaces/user.model';
 import { selectUserAuthData } from '../state/selectors/user.selectors';
+import { TaskManagerState } from '../state/reducers/task-manager-state';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
   constructor(private http: HttpClient) {}
-  private store = inject(Store<User>);
+  private store = inject(Store<TaskManagerState>);
   baseUrl = 'http://localhost:3000/tasks/';
   getTasksUrl = this.baseUrl + 'getAllTasks';
   getTasksByUserIdUrl = this.baseUrl + 'getTasksByUserId/';
@@ -41,7 +42,7 @@ export class TasksService {
     );
   }
 
-  deleteTask(taskId: string): Observable<Object|null> {
+  deleteTask(taskId: string): Observable<Object | null> {
     const url = `${this.deleteTaskUrl}${taskId}`;
     return this.store.select(selectUserAuthData).pipe(
       switchMap((data: UserAuthData) => {

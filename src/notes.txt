@@ -2,10 +2,8 @@ TODOS:
 
 client:
 * fix long task visuals
-* understand the collection idea
 * avatars
 * add validations to add new task
-* remove angular tutorial files
 
 server:
 * Ensure that users can only access and modify their own data.'
