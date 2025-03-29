@@ -66,9 +66,21 @@ export class TasksService {
   }
 
   updateTask(updatedTask: Task): Observable<Task> {
-    const url = `${this.updateTaskUrl}${updatedTask._id}`;
-    const { _id, __v, ...updatedTaskData } = updatedTask;
-    return this.http.put<Task>(url, updatedTaskData);
+    return this.store.select(selectUserAuthData).pipe(
+      switchMap((data: UserAuthData) => {
+        if (data && data.token) {
+          const url = `${this.updateTaskUrl}${updatedTask._id}`;
+          const headers = new HttpHeaders({
+            Authorization: data.token,
+          });
+          const { _id, __v, ...updatedTaskData } = updatedTask;
+          return this.http.put<Task>(url, updatedTaskData, { headers });
+        } else {
+          console.info('User is logged out, update task prevented.');
+          return throwError(() => new Error('User is not authenticated'));
+        }
+      })
+    );
   }
 
   createTask(newTask: NewTask): Observable<Task | null> {
