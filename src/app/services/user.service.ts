@@ -1,38 +1,56 @@
-// import { HttpClient } from '@angular/common/http';
-// import { Injectable } from '@angular/core';
-// import { Observable } from 'rxjs';
-// import { map } from 'rxjs/operators';
-// import { NewTask, Task } from '../interfaces/task.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { catchError, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { User, UserAuthData } from '../interfaces/user.model';
+import { Store } from '@ngrx/store';
+import { TaskManagerState } from '../state/reducers/task-manager-state';
+import { selectUserAuthData } from '../state/selectors/user.selectors';
 
-// @Injectable({ providedIn: 'root' })
-// export class UserService {
-//   constructor(private http: HttpClient) {}
-//   baseUrl = 'http://localhost:3000/tasks/';
-//   getTasksUrl = this.baseUrl + 'getAllTasks';
-//   deleteTaskUrl = this.baseUrl + 'deleteTask/';
-//   updateTaskUrl = this.baseUrl + 'updateTask/';
-//   createTaskUrl = this.baseUrl + 'createTask/';
+@Injectable({ providedIn: 'root' })
+export class UserService {
+  constructor(private http: HttpClient) {}
+  private store = inject(Store<TaskManagerState>);
+  baseUrl = 'http://localhost:3000/user/';
+  getUserDataUrl = this.baseUrl + 'getUserById/';
+  updateUserUrl = this.baseUrl + 'updateUser/';
 
-//   getTasks(): Observable<Array<Task>> {
-//     return this.http.get<Task[]>(this.getTasksUrl).pipe(
-//       map((tasks) => {
-//         return tasks || [];
-//       })
-//     );
-//   }
+  getUserData(): Observable<User | null> {
+    return this.store.select(selectUserAuthData).pipe(
+      switchMap((data: UserAuthData) => {
+        if (data && data.userId && data.token) {
+          const url = `${this.getUserDataUrl}${data.userId}`;
+          const headers = new HttpHeaders({
+            Authorization: data.token,
+          });
+          return this.http.get<User>(url, { headers }).pipe(
+            map((user) => user || {}),
+            catchError((error) => {
+              console.error('Error fetching user data');
+              return throwError(() => error);
+            })
+          );
+        } else {
+          console.info('User is logged out, not fetching user data.');
+          return of(null);
+        }
+      })
+    );
+  }
 
-//   deleteTask(taskId: string): Observable<any> {
-//     const url = `${this.deleteTaskUrl}${taskId}`;
-//     return this.http.delete(url);
-//   }
-
-//   updateTask(updatedTask: Task): Observable<Task> {
-//     const url = `${this.updateTaskUrl}${updatedTask._id}`;
-//     const { _id, __v, ...updatedTaskData } = updatedTask;
-//     return this.http.put<Task>(url, updatedTaskData);
-//   }
-
-//   createTask(newTask: NewTask): Observable<Task> {
-//     return this.http.post<Task>(this.createTaskUrl, newTask);
-//   }
-// }
+  updateUser(updatedUser: Partial<User>): Observable<User> {
+    return this.store.select(selectUserAuthData).pipe(
+      switchMap((data: UserAuthData) => {
+        if (data && data.token && data.userId) {
+          const url = `${this.updateUserUrl}${data.userId}`;
+          const headers = new HttpHeaders({
+            Authorization: data.token,
+          });
+          return this.http.put<User>(url, updatedUser, { headers });
+        } else {
+          console.info('User is logged out, update user prevented.');
+          return throwError(() => new Error('User is not authenticated'));
+        }
+      })
+    );
+  }
+}

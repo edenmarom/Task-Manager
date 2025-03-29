@@ -4,7 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { NewTask, Task } from '../interfaces/task.model';
 import { Store } from '@ngrx/store';
-import { User, UserAuthData } from '../interfaces/user.model';
+import { UserAuthData } from '../interfaces/user.model';
 import { selectUserAuthData } from '../state/selectors/user.selectors';
 import { TaskManagerState } from '../state/reducers/task-manager-state';
 

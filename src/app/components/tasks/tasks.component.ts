@@ -8,6 +8,7 @@ import { selectTasks } from '../../state/selectors/tasks.selectors';
 import { Store } from '@ngrx/store';
 import { map, Observable } from 'rxjs';
 import { TasksApiActions } from '../../state/actions/tasks.actions';
+import { TaskManagerState } from '../../state/reducers/task-manager-state';
 
 @Component({
   selector: 'app-tasks',
@@ -17,7 +18,7 @@ import { TasksApiActions } from '../../state/actions/tasks.actions';
   providers: [TasksService],
 })
 export class TasksComponent {
-  private store = inject(Store<ReadonlyArray<Task>>);
+  private store = inject(Store<TaskManagerState>);
   tasksService: TasksService = inject(TasksService);
   selectedTask: Task | null = null;
   isEditModalOpen: boolean = false;

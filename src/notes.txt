@@ -4,6 +4,7 @@ client:
 * fix long task visuals
 * avatars
 * add validations to add new task
+* explore actions after logout
 
 server:
 * Ensure that users can only access and modify their own data.'

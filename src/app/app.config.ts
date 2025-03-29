@@ -10,6 +10,7 @@ import { TasksEffect } from './state/effects/tasks.effects';
 import { provideEffects } from '@ngrx/effects';
 import { provideHttpClient } from '@angular/common/http';
 import { AuthEffect } from './state/effects/auth.effects';
+import { UserEffect } from './state/effects/user.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +22,7 @@ export const appConfig: ApplicationConfig = {
       tasks: tasksReducer,
       user: userReducer 
     }),
-    provideEffects(TasksEffect, AuthEffect),
+    provideEffects(TasksEffect, AuthEffect, UserEffect),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),

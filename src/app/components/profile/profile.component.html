@@ -1,7 +1,7 @@
-<div class="profile-container">
+<div class="profile-container" *ngIf="profile$ | async as profile">
   <div class="profile-card">
     <div class="profile-image-container">
-      <img class="profile-image" [src]="profile.imageUrl" alt="Profile Picture">
+      <img class="profile-image" [src]="profile.imgUrl" alt="Profile Picture">
     </div>
     <div class="profile-details">
       <h4>{{ profile.name }}</h4>
@@ -10,7 +10,32 @@
       <p>Date of Birth: {{ profile.dob }}</p>
     </div>
     <div class="profile-actions">
-      <button class="edit-profile-btn">Edit Profile</button>
+      <button class="edit-profile-btn" (click)="openEditModal(profile)">Edit Profile</button>
+    </div>
+  </div>
+</div>
+
+<div class="edit-profile-overlay" *ngIf="isEditModalOpen">
+  <div class="edit-profile-modal">
+    <h3>Edit Profile</h3>
+    <label>Name:</label>
+    <input type="text" [(ngModel)]="editableProfile.name" class="profile-input" />
+
+    <label>Email:</label>
+    <input type="email" [(ngModel)]="editableProfile.email" class="profile-input" />
+
+    <label>Phone:</label>
+    <input type="text" [(ngModel)]="editableProfile.phone" class="profile-input" />
+
+    <label>Date of Birth:</label>
+    <input type="date" [(ngModel)]="editableProfile.dob" class="profile-input" />
+
+    <label>Profile Image URL:</label>
+    <input type="text" [(ngModel)]="editableProfile.imgUrl" class="profile-input" />
+
+    <div class="profile-actions">
+      <button class="edit-btn" (click)="saveEditedProfile()">Save</button>
+      <button class="delete-btn" (click)="closeEditModal()">Cancel</button>
     </div>
   </div>
 </div>
