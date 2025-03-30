@@ -13,6 +13,7 @@
 
 .task-card p {
     margin-bottom: 5px;
+    white-space: pre-line;
 }
 
 .task-actions {

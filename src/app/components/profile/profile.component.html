@@ -1,7 +1,7 @@
 <div class="profile-container" *ngIf="profile$ | async as profile">
   <div class="profile-card">
     <div class="profile-image-container">
-      <img class="profile-image" [src]="profile.imgUrl" alt="Profile Picture">
+      <img class="profile-image" [src]="avatarUrl" alt="Profile Picture">
     </div>
     <div class="profile-details">
       <h4>{{ profile.name }}</h4>
@@ -14,28 +14,35 @@
     </div>
   </div>
 </div>
-
 <div class="edit-profile-overlay" *ngIf="isEditModalOpen">
   <div class="edit-profile-modal">
     <h3>Edit Profile</h3>
-    <label>Name:</label>
-    <input type="text" [(ngModel)]="editableProfile.name" class="profile-input" />
+    <form [formGroup]="editProfileForm" (ngSubmit)="saveEditedProfile()">
+      <label>Name:</label>
+      <input type="text" formControlName="name" class="profile-input" />
 
-    <label>Email:</label>
-    <input type="email" [(ngModel)]="editableProfile.email" class="profile-input" />
+      <label>Email:</label>
+      <input type="email" formControlName="email" class="profile-input" />
+      <div class="profile-input-error">
+        <small *ngIf="email?.invalid && email?.touched">Invalid email format.</small>
+      </div>
 
-    <label>Phone:</label>
-    <input type="text" [(ngModel)]="editableProfile.phone" class="profile-input" />
+      <label>Phone:</label>
+      <input type="text" formControlName="phone" class="profile-input" />
+      <div class="profile-input-error">
+        <small *ngIf="phone?.invalid && phone?.touched">Invalid phone format.</small>
+      </div>
 
-    <label>Date of Birth:</label>
-    <input type="date" [(ngModel)]="editableProfile.dob" class="profile-input" />
-
-    <label>Profile Image URL:</label>
-    <input type="text" [(ngModel)]="editableProfile.imgUrl" class="profile-input" />
-
-    <div class="profile-actions">
-      <button class="edit-btn" (click)="saveEditedProfile()">Save</button>
-      <button class="delete-btn" (click)="closeEditModal()">Cancel</button>
-    </div>
+      <label>Date of Birth:</label>
+      <input type="date" formControlName="dob" class="profile-input" />
+      <div class="profile-input-error">
+        <small *ngIf="dob?.invalid && dob?.touched">Invalid date of birth.</small>
+      </div>
+      
+      <div class="profile-actions">
+        <button class="edit-btn" type="submit" [disabled]="editProfileForm.invalid">Save</button>
+        <button class="delete-btn" type="button" (click)="closeEditModal()">Cancel</button>
+      </div>
+    </form>
   </div>
 </div>

@@ -73,6 +73,14 @@
     align-items: center;
 }
 
+.edit-profile-overlay small {
+    color: var(--logo-orange-bright);
+}
+
+.profile-input-error {
+    padding-bottom: 3%;
+}
+
 .edit-profile-modal {
     background: var(--logo-grey);
     padding: 5%;

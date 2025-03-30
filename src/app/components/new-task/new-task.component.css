@@ -32,6 +32,10 @@
     margin-bottom: 5px;
 }
 
+.form-group small {
+    color: var(--logo-orange-bright);
+}
+
 .form-group input,
 .form-group textarea,
 .form-group select {

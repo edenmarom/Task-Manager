@@ -1,40 +1,76 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { TaskManagerState } from '../../state/reducers/task-manager-state';
-import { selectProfileData } from '../../state/selectors/user.selectors';
 import { User } from '../../interfaces/user.model';
 import { UsersApiActions } from '../../state/actions/user.actions';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { selectProfileData } from '../../state/selectors/user.selectors';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+//@ts-ignore
+import imgGen from '@dudadev/random-img';
+import { TaskManagerState } from '../../state/reducers/task-manager-state';
+
+interface EditProfileForm {
+  name: FormControl<string | null>;
+  email: FormControl<string | null>;
+  phone: FormControl<string | null>;
+  dob: FormControl<string | null>;
+  imgUrl: FormControl<string | null>;
+}
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
-  imports: [CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   private store = inject(Store<TaskManagerState>);
+  private fb = inject(FormBuilder);
   profile$ = this.store.select(selectProfileData);
   profile: User | null = null;
-  isEditModalOpen: boolean = false;
-  editableProfile: User = {
-    name: '',
-    email: '',
-    phone: '',
-    dob: '',
-    imgUrl: '',
-  };
+  isEditModalOpen = false;
+  editProfileForm!: FormGroup<EditProfileForm>;
+  avatarUrl = '';
 
   ngOnInit() {
     this.store.dispatch(UsersApiActions.getUserData());
-    this.profile$.subscribe((data) => {
-      this.profile = data;
-    });
+    this.profile$.subscribe((data: any) => (this.profile = data));
+    imgGen().then((url: string) => (this.avatarUrl = url));
+  }
+
+  get email() {
+    return this.editProfileForm.get('email');
+  }
+
+  get phone() {
+    return this.editProfileForm.get('phone');
+  }
+
+  get dob() {
+    return this.editProfileForm.get('dob');
   }
 
   openEditModal(profile: User) {
-    this.editableProfile = { ...profile };
+    this.editProfileForm = this.fb.group({
+      name: profile.name,
+      email: [profile.email, [Validators.required, Validators.email]],
+      phone: [
+        profile.phone,
+        [
+          Validators.pattern('^[0-9]{10}$'),
+          Validators.minLength(10),
+          Validators.maxLength(10),
+        ],
+      ],
+      dob: profile.dob,
+      imgUrl: profile.imgUrl,
+    });
     this.isEditModalOpen = true;
   }
 
@@ -43,33 +79,20 @@ export class ProfileComponent {
   }
 
   saveEditedProfile() {
-    if (this.profile){
-      const changes: Partial<User> = {};
-      if (this.editableProfile.name !== this.profile.name) {
-        changes.name = this.editableProfile.name;
-      }
-      if (this.editableProfile.email !== this.profile.email) {
-        changes.email = this.editableProfile.email;
-      }
-      if (this.editableProfile.phone !== this.profile.phone) {
-        changes.phone = this.editableProfile.phone;
-      }
-      if (this.editableProfile.dob !== this.profile.dob) {
-        changes.dob = this.editableProfile.dob;
-      }
-      if (this.editableProfile.imgUrl !== this.profile.imgUrl) {
-        changes.imgUrl = this.editableProfile.imgUrl;
-      }
+    if (this.editProfileForm.valid && this.profile) {
+      const changes: Partial<User> = Object.entries(this.editProfileForm.value)
+        .filter(
+          ([key, value]) =>
+            value !== undefined && value !== this.profile![key as keyof User]
+        )
+        .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 
-      if (Object.keys(changes).length > 0) {
-        console.log('Updating with changed fields:', changes);
-        console.log(this.profile);
+      if (Object.keys(changes).length) {
         this.store.dispatch(
           UsersApiActions.updateUser({ updatedUser: changes })
         );
         this.closeEditModal();
       }
-  }
+    }
   }
 }
-
