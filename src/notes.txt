@@ -1,8 +1,0 @@
-TODOS:
-
-client:
-* explore actions after logout
-
-
-server:
-* Ensure that users can only access and modify their own data.'
