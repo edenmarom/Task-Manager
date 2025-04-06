@@ -6,23 +6,22 @@ import { Store } from '@ngrx/store';
 import { TaskManagerState } from '../state/reducers/task-manager-state';
 import { selectUserAuthData } from '../state/selectors/user.selectors';
 
+export const USER_API_BASE_URL = 'http://localhost:3000/user/';
+
+
 @Injectable({ providedIn: 'root' })
 export class UserService {
   constructor(private http: HttpClient) {}
   private store = inject(Store<TaskManagerState>);
-  baseUrl = 'http://localhost:3000/user/';
-  getUserDataUrl = this.baseUrl + 'getUserById/';
-  updateUserUrl = this.baseUrl + 'updateUser/';
+  getUserDataUrl = USER_API_BASE_URL + 'getUserById/';
+  updateUserUrl = USER_API_BASE_URL + 'updateUser/';
 
   getUserData(): Observable<User | null> {
     return this.store.select(selectUserAuthData).pipe(
       switchMap((data: UserAuthData) => {
-        if (data && data.userId && data.token) {
+        if (data && data.userId) {
           const url = `${this.getUserDataUrl}${data.userId}`;
-          const headers = new HttpHeaders({
-            Authorization: data.token,
-          });
-          return this.http.get<User>(url, { headers }).pipe(
+          return this.http.get<User>(url).pipe(
             map((user) => user || {}),
             catchError((error) => {
               console.error('Error fetching user data');
@@ -40,12 +39,9 @@ export class UserService {
   updateUser(updatedUser: Partial<User>): Observable<User> {
     return this.store.select(selectUserAuthData).pipe(
       switchMap((data: UserAuthData) => {
-        if (data && data.token && data.userId) {
+        if (data && data.userId) {
           const url = `${this.updateUserUrl}${data.userId}`;
-          const headers = new HttpHeaders({
-            Authorization: data.token,
-          });
-          return this.http.put<User>(url, updatedUser, { headers });
+          return this.http.put<User>(url, updatedUser);
         } else {
           console.info('User is logged out, update user prevented.');
           return throwError(() => new Error('User is not authenticated'));

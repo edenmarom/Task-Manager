@@ -12,7 +12,9 @@
   "private": true,
   "jest": {
     "preset": "jest-preset-angular",
-    "setupFilesAfterEnv": ["<rootDir>/setup-jest.ts"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/setup-jest.ts"
+    ]
   },
   "dependencies": {
     "@angular-devkit/build-angular": "^19.2.0",
